@@ -247,8 +247,12 @@ public class DBproject{//reference to physical database connection
 				System.out.println("6. List all available appointments of a given department");
 				System.out.println("7. List total number of different types of appointments per doctor in descending order");
 				System.out.println("8. Find total number of patients per doctor with a given status");
-				System.out.println("9. < EXIT");
-				
+				System.out.println("9. List all the requests addressed by a given maintenance staff ID");
+				System.out.println("10. List all maintenance requests made by a given doctor name");
+				System.out.println("11. List the specialized departments for a given hospital name");
+				System.out.println("12. Find the appointment details for a given appointment number");
+				System.out.println("13. < EXIT");
+
 				switch (readChoice()){
 					case 1: AddDoctor(esql); break;
 					case 2: AddPatient(esql); break;
@@ -655,8 +659,8 @@ public class DBproject{//reference to physical database connection
 
 	public static void ListRequestsMadebyDoctor(DBproject esql) {//10 Given a doctor name, list all maintenance requests made by the doctor.
 		try {
-			String query = "SELECT patient_per_hour, dept_name, time_slot, sid FROM request_maintenance WHERE did = ";
-			System.out.print("\tPlease enter doctor id: ");
+			String query = "SELECT R.patient_per_hour, R.dept_name, R.time_slot, R.sid FROM request_maintenance R, Doctor D WHERE R.did = D.doctor_ID AND D.name = ";
+			System.out.print("\tPlease enter doctor name: ");
 			String input20 = in.readLine();
 			query += (input20 + ";");
 
