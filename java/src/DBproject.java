@@ -598,7 +598,7 @@ public class DBproject{//reference to physical database connection
 			System.out.print("\tPlease enter doctor id: ");
 			String input15 = in.readLine();
 			query += input15;
-			query += "\' AND (adate BETWEEN \'"; 
+			query += "\' AND (A.adate BETWEEN \'"; 
 			System.out.print("\tPlease enter first date of date range of the appt (MM/DD/YYYY): ");
 			String input16 = in.readLine();
 			query += (input16 + "\' AND \'");
@@ -620,7 +620,7 @@ public class DBproject{//reference to physical database connection
 			String dname = in.readLine();
 			query += dname;
 			query += "\' AND A.adate = \'"; 
-			System.out.print("\tPlease enter the specific date: (MM/DD/YEAR) ");
+			System.out.print("\tPlease enter the specific date: (MM/DD/YEAR): ");
 			String date = in.readLine();
 			query += (date + "\';");
 
