@@ -612,6 +612,7 @@ public class DBproject{//reference to physical database connection
 			System.err.println(e.getMessage());
 		}
 	}
+
 	public static void ListAvailableAppointmentsOfDepartment(DBproject esql) {//6 List all available appointments of a given department:
 		try {
 			String query = "SELECT A.appnt_ID, A.adate, A.time_slot FROM Appointment A, has_appointment H, Doctor D, Department DEPT \nWHERE A.status = \'AV\' AND A.appnt_ID = H.appt_id AND H.doctor_id = D.doctor_ID AND D.did = DEPT.dept_ID AND DEPT.name =  \' ";
@@ -621,13 +622,15 @@ public class DBproject{//reference to physical database connection
 			query += "\' AND A.adate = \'"; 
 			System.out.print("\tPlease enter the specific date: (MM/DD/YEAR) ");
 			String date = in.readLine();
-			query += (date + "\');");
+			query += (date + "\';");
+
 			int row = esql.executeQueryAndPrintResult(query);
 			System.out.println("total row(s): " + row);
 		}catch(Exception e) {
 			System.err.println(e.getMessage());
 		}
 	}
+
 	public static void ListStatusNumberOfAppointmentsPerDoctor(DBproject esql) {//7 List total number of different types of appointments per doctor in descending order
 		try {
 			String query = "SELECT D.doctor_ID, A.status, COUNT(*) AS NAPPNT FROM Appointment A, has_appointment H, Doctor D WHERE A.appnt_ID = H.appt_id AND H.doctor_id = D.doctor_ID GROUP BY D.doctor_ID, A.status ORDER BY NAPPNT DESC";
@@ -643,8 +646,10 @@ public class DBproject{//reference to physical database connection
 		try {
 			System.out.print("\tPlease enter appointment status ex:(AC, AV, PA, WL): ");
 			String input18 = in.readLine();
-			String query = "SELECT H.doctor_id, COUNT( DISTINCT S.pid ) AS NPATIENT FROM Appointment A, has_appointment H, searches S WHERE S.aid = A.appnt_ID AND A.appnt_ID = H.appt_id GROUP BY H.doctor_id HAVING A.status = '" + input18 + "' ;" ;
-			
+			String query = "SELECT H.doctor_id, A.status, COUNT( DISTINCT S.pid ) AS NPATIENT FROM Appointment A, has_appointment H, searches S WHERE S.aid = A.appnt_ID AND A.appnt_ID = H.appt_id GROUP BY H.doctor_id, A.status HAVING A.status = \'";
+			//"SELECT H.doctor_id, COUNT( DISTINCT S.pid ) AS NPATIENT FROM Appointment A, has_appointment H, searches S WHERE S.aid = A.appnt_ID AND A.appnt_ID = H.appt_id GROUP BY H.doctor_id HAVING A.status = '" + input18 + "' ;" ;
+			query += (input18 + "\';");
+
 			int row = esql.executeQueryAndPrintResult(query);
 			System.out.println("total row(s): " + row);
 		}catch(Exception e) {
