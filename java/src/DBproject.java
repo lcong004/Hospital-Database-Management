@@ -254,11 +254,11 @@ public class DBproject{//reference to physical database connection
 					case 2: AddPatient(esql); break;
 					case 3: AddAppointment(esql); break;
 					case 4: MakeAppointment(esql); break;
-					/*case 5: ListAppointmentsOfDoctor(esql); break;
+					case 5: ListAppointmentsOfDoctor(esql); break;
 					case 6: ListAvailableAppointmentsOfDepartment(esql); break;
 					case 7: ListStatusNumberOfAppointmentsPerDoctor(esql); break;
 					case 8: FindPatientsCountWithStatus(esql); break;
-					case 9: keepon = false; break;*/
+					case 9: keepon = false; break;
 				}
 			}
 		}catch(Exception e){
