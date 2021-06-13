@@ -219,6 +219,24 @@ public class DBproject{//reference to physical database connection
 			
 			boolean keepon = true;
 			while(keepon){
+				System.out.println(
+					"\n\n*******************************************************************************\n" +
+					"                 Welcome to your Hospital Database management System!     \n" +
+					"***********************************************************************************\n");
+       	   System.out.println();
+     	  	   System.out.println("--------------------------Welcome to---------------------------");
+     	  	   System.out.println("---------------------------------------------------------------");
+       	   System.out.println(" 88                                88                    88    ");
+       	   System.out.println(" 88                                     88               88    ");
+      	   System.out.println(" 88,dba,  ,adba,   ,adba  888888,  88 MM88MMM  ,aPYba,   88    ");
+      	   System.out.println(" 88   88 8b    d8 88      88    ad 88   8P     88   88   88    ");
+      	   System.out.println(" 88   88 8b    88  ,8888, 88   ad  88   8P    88     88  88    ");
+            System.out.println(" 88   88 8b    d8      88 88aad    88   8P P   88    88  88    ");
+       	   System.out.println(" 88   88  `YbdP'  aadba,  88       88   8PP     'aPY' 8P 88888 ");
+       	   System.out.println("                          88                                   ");
+       	   System.out.println("                          88                                   ");
+       	   System.out.println("---------------------------------------------------------------");
+       	   System.out.println();
 				System.out.println("MAIN MENU");
 				System.out.println("---------");
 				System.out.println("1. Add Doctor");
@@ -574,7 +592,7 @@ public class DBproject{//reference to physical database connection
 
 	}
 
-	/*public static void ListAppointmentsOfDoctor(DBproject esql) {//5 List appointments of a given doctor:
+	public static void ListAppointmentsOfDoctor(DBproject esql) {//5 List appointments of a given doctor:
 		try {
 			String query = "SELECT A.appnt_ID, A.adate, A.time_slot, A.status FROM Appointment A, has_appointment H WHERE A.appnt_ID = H.appt_id AND (A.status = \'AC\' OR A.status = \'AV\') AND H.doctor_id = \'";
 			System.out.print("\tPlease enter doctor id: ");
@@ -633,5 +651,4 @@ public class DBproject{//reference to physical database connection
 			System.err.println(e.getMessage());
 		}
 	}
-	*/
 }
