@@ -259,7 +259,10 @@ public class DBproject{//reference to physical database connection
 					case 7: ListStatusNumberOfAppointmentsPerDoctor(esql); break;
 					case 8: FindPatientsCountWithStatus(esql); break;
 					case 9: ListRequestsAddressedbyStaff(esql); break;
-					case 10: keepon = false; break;
+					case 10: ListRequestsMadebyDoctor(esql); break;
+					case 11: DepartmentsOfHospital(esql); break;
+					case 12: DetailsOfAppointment(esql); break;
+					case 13: keepon = false; break;
 				}
 			}
 		}catch(Exception e){
@@ -664,7 +667,7 @@ public class DBproject{//reference to physical database connection
 		}
 	}
 
-	public static void ListStatusNumberOfAppointmentsPerDoctor(DBproject esql) {//11 Given a hospital name, find the specialized departments in the hospital.
+	public static void DepartmentsOfHospital(DBproject esql) {//11 Given a hospital name, find the specialized departments in the hospital.
 		try {
 			String query = "SELECT D.name FROM Hospital H, Department D WHERE H.hospital_ID = D.hid AND H.name = \'";
 			System.out.print("\tPlease enter hospital name: ");
@@ -678,7 +681,7 @@ public class DBproject{//reference to physical database connection
 		}
 	}
 
-	public static void ListStatusNumberOfAppointmentsPerDoctor(DBproject esql) {//12 Given an appointment number, find the appointment details (time slot, doctor name, department, etc.
+	public static void DetailsOfAppointment(DBproject esql) {//12 Given an appointment number, find the appointment details (time slot, doctor name, department, etc.
 			String query = "SELECT D.name, A.time_slot, Dept.name FROM Appointment A, has_appointment H, Doctor D, Department Dept WHERE A.appnt_ID = H.appt_id AND H.doctor_id = D.doctor_ID AND D.did = Dept.dept_ID AND A.appnt_ID = ";
 			System.out.print("\tPlease enter appointment id: ");
 			String input22 = in.readLine();
