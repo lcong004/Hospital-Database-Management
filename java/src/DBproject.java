@@ -30,19 +30,15 @@ import java.util.ArrayList;
  *
  */
 
-public class DBproject{
-	//reference to physical database connection
+public class DBproject{//reference to physical database connection
 	private Connection _connection = null;
 	static BufferedReader in = new BufferedReader(new InputStreamReader(System.in));
 	
 	public DBproject(String dbname, String dbport, String user, String passwd) throws SQLException {
 		System.out.print("Connecting to database...");
-		try{
-			// constructs the connection URL
+		try{// constructs the connection URL
 			String url = "jdbc:postgresql://localhost:" + dbport + "/" + dbname;
-			System.out.println ("Connection URL: " + url + "\n");
-			
-			// obtain a physical connection
+			System.out.println ("Connection URL: " + url + "\n");// obtain a physical connection
 	        this._connection = DriverManager.getConnection(url, user, passwd);
 	        System.out.println("Done");
 		}catch(Exception e){
@@ -59,14 +55,9 @@ public class DBproject{
 	 * @param sql the input SQL string
 	 * @throws java.sql.SQLException when update failed
 	 * */
-	public void executeUpdate (String sql) throws SQLException { 
-		// creates a statement object
-		Statement stmt = this._connection.createStatement ();
-
-		// issues the update instruction
-		stmt.executeUpdate (sql);
-
-		// close the instruction
+	public void executeUpdate (String sql) throws SQLException { // creates a statement object
+		Statement stmt = this._connection.createStatement ();// issues the update instruction
+		stmt.executeUpdate (sql);// close the instruction
 	    stmt.close ();
 	}//end executeUpdate
 
@@ -79,11 +70,8 @@ public class DBproject{
 	 * @return the number of rows returned
 	 * @throws java.sql.SQLException when failed to execute the query
 	 */
-	public int executeQueryAndPrintResult (String query) throws SQLException {
-		//creates a statement object
-		Statement stmt = this._connection.createStatement ();
-
-		//issues the query instruction
+	public int executeQueryAndPrintResult (String query) throws SQLException {//creates a statement object
+		Statement stmt = this._connection.createStatement ();//issues the query instruction
 		ResultSet rs = stmt.executeQuery (query);
 
 		/*
@@ -92,9 +80,7 @@ public class DBproject{
 		 */
 		ResultSetMetaData rsmd = rs.getMetaData ();
 		int numCol = rsmd.getColumnCount ();
-		int rowCount = 0;
-		
-		//iterates through the result set and output them to standard out.
+		int rowCount = 0;//iterates through the result set and output them to standard out.
 		boolean outputHeader = true;
 		while (rs.next()){
 			if(outputHeader){
@@ -122,11 +108,8 @@ public class DBproject{
 	 * @return the query result as a list of records
 	 * @throws java.sql.SQLException when failed to execute the query
 	 */
-	public List<List<String>> executeQueryAndReturnResult (String query) throws SQLException { 
-		//creates a statement object 
-		Statement stmt = this._connection.createStatement (); 
-		
-		//issues the query instruction 
+	public List<List<String>> executeQueryAndReturnResult (String query) throws SQLException { //creates a statement object 
+		Statement stmt = this._connection.createStatement (); //issues the query instruction 
 		ResultSet rs = stmt.executeQuery (query); 
 	 
 		/*
@@ -135,9 +118,7 @@ public class DBproject{
 		*/ 
 		ResultSetMetaData rsmd = rs.getMetaData (); 
 		int numCol = rsmd.getColumnCount (); 
-		int rowCount = 0; 
-	 
-		//iterates through the result set and saves the data returned by the query. 
+		int rowCount = 0; //iterates through the result set and saves the data returned by the query. 
 		boolean outputHeader = false;
 		List<List<String>> result  = new ArrayList<List<String>>(); 
 		while (rs.next()){
@@ -158,16 +139,11 @@ public class DBproject{
 	 * @return the number of rows returned
 	 * @throws java.sql.SQLException when failed to execute the query
 	 */
-	public int executeQuery (String query) throws SQLException {
-		//creates a statement object
-		Statement stmt = this._connection.createStatement ();
-
-		//issues the query instruction
+	public int executeQuery (String query) throws SQLException {//creates a statement object
+		Statement stmt = this._connection.createStatement ();//issues the query instruction
 		ResultSet rs = stmt.executeQuery (query);
 
-		int rowCount = 0;
-
-		//iterates through the result set and count nuber of results.
+		int rowCount = 0;//iterates through the result set and count nuber of results.
 		if(rs.next()){
 			rowCount++;
 		}//end while
@@ -201,8 +177,7 @@ public class DBproject{
 			if (this._connection != null){
 				this._connection.close ();
 			}//end if
-		}catch (SQLException e){
-	         // ignored.
+		}catch (SQLException e){// ignored.
 		}//end try
 	}//end cleanup
 
@@ -211,6 +186,8 @@ public class DBproject{
 	 * 
 	 * @param args the command line arguments this inclues the <mysql|pgsql> <login file>
 	 */
+	 
+
 	public static void main (String[] args) {
 		if (args.length != 3) {
 			System.err.println (
@@ -259,11 +236,11 @@ public class DBproject{
 					case 2: AddPatient(esql); break;
 					case 3: AddAppointment(esql); break;
 					case 4: MakeAppointment(esql); break;
-					case 5: ListAppointmentsOfDoctor(esql); break;
+					/*case 5: ListAppointmentsOfDoctor(esql); break;
 					case 6: ListAvailableAppointmentsOfDepartment(esql); break;
 					case 7: ListStatusNumberOfAppointmentsPerDoctor(esql); break;
 					case 8: FindPatientsCountWithStatus(esql); break;
-					case 9: keepon = false; break;
+					case 9: keepon = false; break;*/
 				}
 			}
 		}catch(Exception e){
@@ -297,7 +274,37 @@ public class DBproject{
 		return input;
 	}//end readChoice
 
+	static void NoExist() throws Exception { 
+		  throw new IllegalArgumentException("ERROR: The id you input is not in our database, please retry");
+   }
+	
+	static void checkid(String str) throws Exception { //any id
+	  if (!str.matches("^[0-9]*$")) { 
+		  throw new IllegalArgumentException("ERROR: Please enter number for the id\n");
+	  }
+   }
+   static void checkGender(String str) throws Exception { //M, F, Other
+	  if (!str.matches("(^M$)|(^F$)|(^Other$)")) { 
+		  throw new IllegalArgumentException("ERROR: Please enter M for Male, F for female, Other for other.\n");
+	  }
+   }
+   static void checkdate(String str) throws Exception { //MM/DD/YEAR
+	  if (!str.matches("[0-9]{1,2}/[0-9]{1,2}/[0-9]{4}")) { 
+		  throw new IllegalArgumentException("ERROR: Please enter valid date format for MM/DD/YEAR, all is number only.\n");
+	  }
+   }
 
+   static void checktime(String str) throws Exception { //00:00-00:00
+	  if (!str.matches("[0-2][0-9]:[0-5][0-9]-[0-2][0-9]:[0-5][0-9]")) { 
+		  throw new IllegalArgumentException("ERROR: Please enter valid time slot format for 00:00-00:00, all is number only.\n");
+	  }
+   }
+      static void checkStatus(String str) throws Exception { //AC,AV,WL,PA
+	  if (!str.matches("(^AC$)|(^AV$)|(^WL$)|(^PA$)")) { 
+		  throw new IllegalArgumentException("ERROR: Please enter corrected status, AV for available, AC for active, WL for waitlist, PA for past.\n");
+	  }
+   }
+   
    public static void Greeting(){
       System.out.println(
          "\n\n*******************************************************************************\n" +
@@ -325,19 +332,23 @@ public class DBproject{
 			String query = "INSERT INTO Doctor (doctor_ID, name, specialty, did) VALUES (";
 			System.out.print("\tPlease enter doctorid: ");
 			String input1 = in.readLine();
+			checkid(input1);
 			query += "\'"+ input1 + "\',";
 			System.out.print("\tPlease enter doctor name: ");
-			input2 = in.readLine();
+			String input2 = in.readLine();
 			query += "\'"+ input2 + "\',";
 			System.out.print("\tPlease enter doctor specialty: ");
-			input3 = in.readLine();
+			String input3 = in.readLine();
 			query += "\'"+ input3 + "\',";
 			System.out.print("\tPlease enter doctor departmentid: ");
-			input4 = in.readLine();
+			String input4 = in.readLine();
+			checkid(input1);
 			query += "\'" + input4 + "\');";
 
 			esql.executeUpdate(query);
-			//System.out.println("total row: " + row);
+			System.out.print("\tYour entered data has successfully update\n");
+			String query2 = "Select * \nFrom Doctor \nWhere doctor_ID = "+ input1 + ";";
+			esql.executeQueryAndPrintResult(query2);
 		}catch(Exception e) {
 			System.err.println(e.getMessage());
 		}
@@ -348,25 +359,31 @@ public class DBproject{
 			String query = "INSERT INTO Patient (patient_ID, name, gtype, age, address, number_of_appts) VALUES (";
 			System.out.print("\tPlease enter patientid: ");
 			String input5 = in.readLine();
+			checkid(input5);
 			query += "\'"+ input5 + "\',";
 			System.out.print("\tPlease enter patient name: ");
 			String input6 = in.readLine();
 			query += "\'"+ input6 + "\',";
-			System.out.print("\tPlease enter patient gender: ");
+			System.out.print("\tPlease enter patient gender: M for Male, F for female, Other for other ");
 			String input7 = in.readLine();
+			checkGender(input7);
 			query += "\'"+ input7 + "\',";
 			System.out.print("\tPlease enter patient age: ");
 			String input8 = in.readLine();
+			checkid(input8);
 			query += "\'"+ input8 + "\',";
 			System.out.print("\tPlease enter patient address: ");
 			String input9 = in.readLine();
 			query += "\'"+ input9 + "\',";
 			System.out.print("\tPlease enter patient number_of_appts: ");
 			String input10 = in.readLine();
+			checkid(input10);
 			query += "\'" + input10 + "\');";
 			
 			esql.executeUpdate(query);
-			//System.out.println("total row: " + row);
+			System.out.print("\tYour entered data has successfully update\n");
+			String query2 = "Select * \nFrom Patient \nWhere patient_ID = "+ input5 + ";";
+			esql.executeQueryAndPrintResult(query2);	
 		}catch(Exception e) {
 			System.err.println(e.getMessage());
 		}
@@ -374,22 +391,27 @@ public class DBproject{
 
 	public static void AddAppointment(DBproject esql) {//3.Add Appointment: Ask the user for details of an Appointment and add it to the database.
 		try {
-			String query = "INSERT INTO Appointment (appnt_ID , adate, time_slot, status) VALUES (\'";
-			System.out.print("\tPlease enter appointment id: ");
+			String query = "INSERT INTO Appointment (appnt_ID , adate, time_slot, status) VALUES (";
+			System.out.print("\tPlease enter appointment id: ");			
 			String input11 = in.readLine();
+			checkid(input11);
 			query += "\'"+ input11 + "\',";
-			System.out.print("\tPlease enter appointment date ex:(MM/DD/YYYY): ");
+			System.out.print("\tPlease enter appointment date ex:(MM/DD/YYYY): ");	
 			String input12 = in.readLine();
+			checkdate(input12);
 			query += "\'"+ input12 + "\',";
 			System.out.print("\tPlease enter appointment time slot ex:(12:00-14:00): ");
 			String input13 = in.readLine();
+			checktime(input13);
 			query += "\'"+ input13 + "\',";
 			System.out.print("\tPlease enter appointment status ex:(AC, AV, PA, WL): ");
 			String input14 = in.readLine();
 			query += "\'" + input14 + "\');";
 			
 			esql.executeUpdate(query);
-			//System.out.println("total row(s): " + row);
+			System.out.print("\t\nYour entered data has successfully update\n\n");
+			String query2 = "Select * \nFrom Appointment \nWhere appnt_ID = "+ input11 + ";";
+			esql.executeQueryAndPrintResult(query2);	
 		}catch(Exception e) {
 			System.err.println(e.getMessage());
 		}
@@ -397,73 +419,162 @@ public class DBproject{
 
 
 	public static void MakeAppointment(DBproject esql) {//4 Make an appointment: Given a patient, a doctor and an appointment of the doctor that s/he wants to take
-		try {		
-			int doctor_ID;
-			do {
-				System.out.print("\tPlease enter doctor id for searching his/her appiontment : ");
-				try {
-					doctor_id = Integer.parseInt(in.readLine());
-					break;
-				}catch (Exception e) {
-					System.out.println("Invalid input");
-					continue;
-				}
-			} while(true);
-			int appt_ID;
-			do {
-				System.out.print("\tPlease enter appiontment id: ");
-				try {
-					appt_id = Integer.parseInt(in.readLine());
-					break;
-				}catch (Exception e) {
-					System.out.println("Invalid input");
-					continue;
-				}
-			}while(true);
-
-
-			String query4_1 = "SELECT A.appnt_ID, A.adate, A.time_slot, A.status \nFROM Appointment A\nWHERE A.appnt_ID = (SELECT appt_id \nFROM has_appointment H \nWHERE H.doctor_id = " + doctor_ID + " AND H.appt_id = " + appt_ID + " );";
-			List<List<String>> str = new ArrayList<>();
-			try{
-				str = esql.executeQueryAndReturnResult(query4_1);
-			}catch(SQLException e) {
-				System.err.println(e.getMessage());
+		try {
+		String pid;
+		do {
+			System.out.print("\tPlease enter patient id for adding or change appiontment : ");
+			try {
+				pid = in.readLine();
+				checkid(pid);
+				break;
+			}catch (Exception e) {
+				System.out.println("Invalid input");
+				continue;
 			}
-			System.out.println("List of your chosen appiontment: \n" + str);
-
-			String query4_2 = "SELECT A.status \nFROM Appointment A\nWHERE A.appnt_ID IN (SELECT appt_id \nFROM has_appointment H \nWHERE H.doctor_id = " + doctor_ID + " AND H.appt_id = " + appt_ID + " );";
-			List<List<String>> str2 = new ArrayList<>();
-			try{
-				str2 = esql.executeQueryAndReturnResult(query4_2);
-			}catch(SQLException e) {
-				System.err.println(e.getMessage());
+		}while(true);
+		String queryp = "select patient_ID \nfrom Patient \nwhere patient_ID = " + pid +" ;";
+		int row = esql.executeQueryAndPrintResult(queryp);
+		if(row != 0){
+			System.out.println("The patient is alreay exist in the databasem, going to next step");			
+		}
+		else {
+			System.out.println("The patient is not in our database, you will need to create a new patient information");
+			try {
+			String query = "INSERT INTO Patient (patient_ID, name, gtype, age, address, number_of_appts) VALUES (";
+			System.out.print("\tPlease enter patientid: ");
+			String input5 = in.readLine();
+			checkid(input5);
+			query += "\'"+ input5 + "\',";
+			System.out.print("\tPlease enter patient name: ");
+			String input6 = in.readLine();
+			query += "\'"+ input6 + "\',";
+			System.out.print("\tPlease enter patient gender: M for Male, F for female, Other for other ");
+			String input7 = in.readLine();
+			checkGender(input7);
+			query += "\'"+ input7 + "\',";
+			System.out.print("\tPlease enter patient age: ");
+			String input8 = in.readLine();
+			checkid(input8);
+			query += "\'"+ input8 + "\',";
+			System.out.print("\tPlease enter patient address: ");
+			String input9 = in.readLine();
+			query += "\'"+ input9 + "\',";
+			System.out.print("\tPlease enter patient number_of_appts: ");
+			String input10 = in.readLine();
+			checkid(input10);
+			query += "\'" + input10 + "\');";
+			
+			esql.executeUpdate(query);
+			System.out.print("\tYour entered data has successfully update\n");
+			String query2 = "Select * \nFrom Patient \nWhere patient_ID = "+ input5 + ";";
+			esql.executeQueryAndPrintResult(query2);
+		}catch(Exception e) {
+			System.err.println(e.getMessage());
+		}
+		}
+		
+		
+		
+		String did;
+		do {
+			System.out.print("\tPlease enter doctor id for searching his/her appiontment : ");
+			try {
+				did = in.readLine();
+				checkid(did);
+				String dcheck = "select doctor_ID \nfrom Doctor \nwhere doctor_ID = " + did +" ;";
+				int dd = esql.executeQueryAndPrintResult(dcheck);
+				if(dd == 0){
+					NoExist();
+				}
+				
+				break;
+			}catch (Exception e) {
+				System.out.println("Invalid input");
+				continue;
 			}
+		}while(true);
+		String aid;
+		do {
+			System.out.print("\tPlease enter appiontment id: ");
+			try {
+				aid = in.readLine();
+				checkid(aid);
+				String acheck = "select appnt_ID \nfrom Appointment \nwhere appnt_ID = " + aid +" ;";
+				int aa = esql.executeQueryAndPrintResult(acheck);
+				if(aa == 0){
+					NoExist();
+				}
+				break;
+			}catch (Exception e) {
+				System.out.println("Invalid input");
+				continue;
+			}
+		}while(true);
 
-			if(query4_2.matches("(^AV$)")){
-				String queryAV = "UPDATE Appointment \nSET status = 'AC' \nWHERE appnt_ID = " + appt_ID + ";";
+		
+		String query4_1 = "SELECT A.appnt_ID, A.adate, A.time_slot, A.status \nFROM Appointment A\nWHERE A.appnt_ID IN (SELECT appt_id \nFROM has_appointment H \nWHERE H.doctor_id = " + did + " AND H.appt_id = " + aid + " );";
+		List<List<String>> str = new ArrayList<>();
+		try{
+			str = esql.executeQueryAndReturnResult(query4_1);
+		}catch(SQLException e) {
+			System.err.println(e.getMessage());
+		}
+		System.out.println("List of show you chosen appiontment: \n" + str);
+
+		String query4_2 = "SELECT A.status \nFROM Appointment A\nWHERE A.appnt_ID IN (SELECT appt_id \nFROM has_appointment H \nWHERE H.doctor_id = " + did + " AND H.appt_id = " + aid + " );";
+		List<List<String>> str2 = new ArrayList<>();
+		try{
+			str2 = esql.executeQueryAndReturnResult(query4_2);
+		}catch(SQLException e) {
+			System.err.println(e.getMessage());
+		}
+		
+		if(query4_2.matches("(^AV$)")){
+
+				String queryAV = "UPDATE Appointment \nSET status = 'AC' \nWHERE appnt_ID = " + aid + ";";
+				String queryAV1 = "SET number_of_appts + 1 \nfrom Patient where patient_ID = " + pid +";";
+				try{
+					esql.executeUpdate(queryAV);
+					esql.executeQuery(queryAV1);
+					}catch(SQLException e) {
+						System.err.println(e.getMessage());
+					}	
 				System.out.println("\n\nwe successfully put you in to the appiontment\n");
-			}
+			
+		}
+		else if(query4_2.matches("(^AC$)")){
+				String queryAC = "UPDATE Appointment \nSET status = 'WL' \nWHERE appnt_ID = " + aid + ";";	
+				String queryAC1 = "SET number_of_appts + 1 \nfrom Patient where patient_ID = " + pid +";";
+				try{
+					esql.executeUpdate(queryAC);
+					esql.executeQuery(queryAC1);
+					}catch(SQLException e) {
+						System.err.println(e.getMessage());
+					}	
+				System.out.println("\n\nwe successfully put you in to waitlist\n");
+			
+		}
+		else if(query4_2.matches("(^WL$)")){
+			String queryWL = "SET number_of_appts + 1 \nfrom Patient where patient_ID = " + pid +";";
+				try{
+					esql.executeUpdate(queryWL);
+					}catch(SQLException e) {
+						System.err.println(e.getMessage());
+					}	
+			System.out.println("\n\nwe have add you to the waitlist of this appiontment\n");
+			
+		}
+		else if(query4_2.matches("(^PA$)")){
+			System.out.println("\n\nwe are sorry, the appiontment you want to book is already past\n");			
+		}
 
-			else if(query4_2.matches("(^AC$)")){
-				String queryAC = "UPDATE Appointment \nSET status = 'WL' \nWHERE appnt_ID = " + appt_ID + ";";
-					System.out.println("\n\nwe successfully put you in to the appiontment waitlist\n");
-			}
-
-			else if(query4_2.matches("(^WL$)")){
-
-				System.out.println("\n\nwe are sorry, waitlist is full please check it later\n");
-			}
-
-			else if(query4_2.matches("(^PA$)")){
-				System.out.println("\n\nwe are sorry, the appiontment you want to book is already past\n");
-			}
 		}catch(Exception e) {
 			System.err.println(e.getMessage());
 		}
 
 	}
 
-	public static void ListAppointmentsOfDoctor(DBproject esql) {//5 List appointments of a given doctor:
+	/*public static void ListAppointmentsOfDoctor(DBproject esql) {//5 List appointments of a given doctor:
 		try {
 			String query = "SELECT A.appnt_ID, A.adate, A.time_slot, A.status FROM Appointment A, has_appointment H WHERE A.appnt_ID = H.appt_id AND (A.status = \'AC\' OR A.status = \'AV\') AND H.doctor_id = \'";
 			System.out.print("\tPlease enter doctor id: ");
@@ -471,10 +582,10 @@ public class DBproject{
 			query += input15;
 			query += "\' AND (adate BETWEEN \'"; 
 			System.out.print("\tPlease enter first date of date range of the appt (MM/DD/YYYY): ");
-			input16 = in.readLine();
+			String input16 = in.readLine();
 			query += (input16 + "\' AND \'");
 			System.out.print("\tPlease enter second date of date range of the appt (MM/DD/YYYY): ");
-			input17 = in.readLine();
+			String input17 = in.readLine();
 			query += (input17 + "\');");
 						
 			int row = esql.executeQueryAndPrintResult(query);
@@ -483,22 +594,22 @@ public class DBproject{
 			System.err.println(e.getMessage());
 		}
 	}
-
 	public static void ListAvailableAppointmentsOfDepartment(DBproject esql) {//6 List all available appointments of a given department:
 		try {
-			System.out.print("\tPlease enter department name: \n");
-			string dname = in.readLine();
+			String query = "SELECT A.appnt_ID, A.adate, A.time_slot FROM Appointment A, has_appointment H, Doctor D, Department DEPT \nWHERE A.status = \'AV\' AND A.appnt_ID = H.appt_id AND H.doctor_id = D.doctor_ID AND D.did = DEPT.dept_ID AND DEPT.name =  \' ";
+			System.out.print("\tPlease enter department name: ");
+			String dname = in.readLine();
+			query += dname;
+			query += "\' AND A.adate = \'"; 
 			System.out.print("\tPlease enter the specific date: (MM/DD/YEAR) ");
-			string date = in.readLine();
-			String query = "SELECT A.appnt_ID, A.adate, A.time_slot FROM Appointment A, has_appointment H, Doctor D, Department DEPT \nWHERE A.status = 'AV' AND A.appnt_ID = H.appt_id AND H.doctor_id = D.doctor_ID AND D.did = DEPT.dept_ID AND DEPT.name = "+ dname + " AND A.adate = " + date;
-			
+			String date = in.readLine();
+			query += (date + "\');");
 			int row = esql.executeQueryAndPrintResult(query);
 			System.out.println("total row(s): " + row);
 		}catch(Exception e) {
 			System.err.println(e.getMessage());
 		}
 	}
-
 	public static void ListStatusNumberOfAppointmentsPerDoctor(DBproject esql) {//7 List total number of different types of appointments per doctor in descending order
 		try {
 			String query = "SELECT D.doctor_ID, A.status, COUNT(*) AS NAPPNT FROM Appointment A, has_appointment H, Doctor D WHERE A.appnt_ID = H.appt_id AND H.doctor_id = D.doctor_ID GROUP BY D.doctor_ID, A.status ORDER BY NAPPNT DESC";
@@ -514,7 +625,7 @@ public class DBproject{
 		try {
 			System.out.print("\tPlease enter appointment status ex:(AC, AV, PA, WL): ");
 			String input18 = in.readLine();
-			String query = "SELECT H.doctor_id, COUNT( DISTINCT S.pid ) AS NPATIENT FROM Appointment A, has_appointment H, searches S WHERE S.aid = A.appnt_ID AND A.appnt_ID = H.appt_id GROUP BY H.doctor_id HAVING A.status = " + input18;
+			String query = "SELECT H.doctor_id, COUNT( DISTINCT S.pid ) AS NPATIENT FROM Appointment A, has_appointment H, searches S WHERE S.aid = A.appnt_ID AND A.appnt_ID = H.appt_id GROUP BY H.doctor_id HAVING A.status = '" + input18 + "' ;" ;
 			
 			int row = esql.executeQueryAndPrintResult(query);
 			System.out.println("total row(s): " + row);
@@ -522,4 +633,5 @@ public class DBproject{
 			System.err.println(e.getMessage());
 		}
 	}
+	*/
 }
