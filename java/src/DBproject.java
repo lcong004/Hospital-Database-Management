@@ -258,7 +258,8 @@ public class DBproject{//reference to physical database connection
 					case 6: ListAvailableAppointmentsOfDepartment(esql); break;
 					case 7: ListStatusNumberOfAppointmentsPerDoctor(esql); break;
 					case 8: FindPatientsCountWithStatus(esql); break;
-					case 9: keepon = false; break;
+					case 9: ListRequestsAddressedbyStaff(esql); break;
+					case 10: keepon = false; break;
 				}
 			}
 		}catch(Exception e){
@@ -322,28 +323,6 @@ public class DBproject{//reference to physical database connection
 		  throw new IllegalArgumentException("ERROR: Please enter corrected status, AV for available, AC for active, WL for waitlist, PA for past.\n");
 	  }
    }
-   
-   public static void Greeting(){
-      System.out.println(
-         "\n\n*******************************************************************************\n" +
-         "                 Welcome to your Hospital Database management System!     \n" +
-         "***********************************************************************************\n");
-         System.out.println();
-         System.out.println("--------------------------Welcome to---------------------------");
-         System.out.println("---------------------------------------------------------------");
-         System.out.println(" 88                                88                    88    ");
-         System.out.println(" 88                                     88               88    ");
-         System.out.println(" 88,dba,  ,adba,   ,adba  888888,  88 MM88MMM  ,aPYba,   88    ");
-         System.out.println(" 88   88 8b    d8 88      88    ad 88   8P     88   88   88    ");
-         System.out.println(" 88   88 8b    88  ,8888, 88   ad  88   8P    88     88  88    ");
-         System.out.println(" 88   88 8b    d8      88 88aad    88   8P P   88    88  88    ");
-         System.out.println(" 88   88  `YbdP'  aadba,  88       88   8PP     'aPY' 8P 88888 ");
-         System.out.println("                          88                                   ");
-         System.out.println("                          88                                   ");
-         System.out.println("---------------------------------------------------------------");
-         System.out.println();
-   }//end Greeting
-
 
 	public static void AddDoctor(DBproject esql) {//1.Add Doctor: Ask the user for details of a Doctor and add it to the database
 		try {
@@ -594,11 +573,11 @@ public class DBproject{//reference to physical database connection
 
 	public static void ListAppointmentsOfDoctor(DBproject esql) {//5 List appointments of a given doctor:
 		try {
-			String query = "SELECT A.appnt_ID, A.adate, A.time_slot, A.status FROM Appointment A, has_appointment H WHERE A.appnt_ID = H.appt_id AND (A.status = \'AC\' OR A.status = \'AV\') AND H.doctor_id = \'";
+			String query = "SELECT A.appnt_ID, A.adate, A.time_slot, A.status FROM Appointment A, has_appointment H WHERE A.appnt_ID = H.appt_id AND (A.status = \'AC\' OR A.status = \'AV\') AND H.doctor_id = ";
 			System.out.print("\tPlease enter doctor id: ");
 			String input15 = in.readLine();
 			query += input15;
-			query += "\' AND (A.adate BETWEEN \'"; 
+			query += " AND (A.adate BETWEEN \'"; 
 			System.out.print("\tPlease enter first date of date range of the appt (MM/DD/YYYY): ");
 			String input16 = in.readLine();
 			query += (input16 + "\' AND \'");
@@ -656,4 +635,59 @@ public class DBproject{//reference to physical database connection
 			System.err.println(e.getMessage());
 		}
 	}
+
+	public static void ListRequestsAddressedbyStaff(DBproject esql) {//9 Given a maintenance staff ID, list all the requests addressed by the staff.
+		try {
+			String query = "SELECT patient_per_hour, dept_name, time_slot, did FROM request_maintenance WHERE sid = ";
+			System.out.print("\tPlease enter staff id: ");
+			String input19 = in.readLine();
+			query += (input19 + ";");
+
+			int row = esql.executeQueryAndPrintResult(query);
+			System.out.println("total row(s): " + row);
+		}catch(Exception e) {
+			System.err.println(e.getMessage());
+		}
+	}
+
+	public static void ListRequestsMadebyDoctor(DBproject esql) {//10 Given a doctor name, list all maintenance requests made by the doctor.
+		try {
+			String query = "SELECT patient_per_hour, dept_name, time_slot, sid FROM request_maintenance WHERE did = ";
+			System.out.print("\tPlease enter doctor id: ");
+			String input20 = in.readLine();
+			query += (input20 + ";");
+
+			int row = esql.executeQueryAndPrintResult(query);
+			System.out.println("total row(s): " + row);
+		}catch(Exception e) {
+			System.err.println(e.getMessage());
+		}
+	}
+
+	public static void ListStatusNumberOfAppointmentsPerDoctor(DBproject esql) {//11 Given a hospital name, find the specialized departments in the hospital.
+		try {
+			String query = "SELECT D.name FROM Hospital H, Department D WHERE H.hospital_ID = D.hid AND H.name = \'";
+			System.out.print("\tPlease enter hospital name: ");
+			String input21 = in.readLine();
+			query += (input21 + "\';");
+
+			int row = esql.executeQueryAndPrintResult(query);
+			System.out.println("total row(s): " + row);
+		}catch(Exception e) {
+			System.err.println(e.getMessage());
+		}
+	}
+
+	public static void ListStatusNumberOfAppointmentsPerDoctor(DBproject esql) {//12 Given an appointment number, find the appointment details (time slot, doctor name, department, etc.
+			String query = "SELECT D.name, A.time_slot, Dept.name FROM Appointment A, has_appointment H, Doctor D, Department Dept WHERE A.appnt_ID = H.appt_id AND H.doctor_id = D.doctor_ID AND D.did = Dept.dept_ID AND A.appnt_ID = ";
+			System.out.print("\tPlease enter appointment id: ");
+			String input22 = in.readLine();
+			query += (input22 + ";");
+
+			int row = esql.executeQueryAndPrintResult(query);
+			System.out.println("total row(s): " + row);
+		}catch(Exception e) {
+			System.err.println(e.getMessage());
+		}
+
 }
